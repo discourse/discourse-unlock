@@ -4,7 +4,7 @@
         {{i18n "unlock.settings.lock_name.label"}}
     </div>
     <div class="setting-value">
-      {{text-field value=model.lock_name}}
+      {{text-field value=lock_name}}
       <div class="desc">
         {{{i18n "unlock.settings.lock_name.desc"}}}
       </div>
@@ -15,7 +15,7 @@
         {{i18n "unlock.settings.lock_address.label"}}
     </div>
     <div class="setting-value">
-      {{text-field value=model.lock_address placeholder="0x..."}}
+      {{text-field value=lock_address placeholder="0x..."}}
       <div class="desc">
         {{{i18n "unlock.settings.lock_address.desc"}}}
       </div>
@@ -26,7 +26,7 @@
         {{i18n "unlock.settings.lock_network.label"}}
     </div>
     <div class="setting-value">
-      {{text-field value=model.lock_network}}
+      {{text-field value=lock_network}}
       <div class="desc">
         {{{i18n "unlock.settings.lock_network.desc"}}}
       </div>
@@ -37,7 +37,7 @@
         {{i18n "unlock.settings.locked_categories.label"}}
     </div>
     <div class="setting-value">
-      {{category-selector categories=model.locked_categories onChange=(action (mut model.locked_categories))}}
+      {{category-selector categories=lockedCategories onChange=(action "changeLockedCategories")}}
       <div class="desc">
         {{{i18n "unlock.settings.locked_categories.desc"}}}
       </div>
@@ -48,7 +48,7 @@
         {{i18n "unlock.settings.locked_topic_icon.label"}}
     </div>
     <div class="setting-value">
-      {{icon-picker value=model.locked_topic_icon options=(hash maximum=1) onChange=(action (mut model.locked_topic_icon))}}
+      {{icon-picker value=locked_topic_icon options=(hash maximum=1) onChange=(action (mut locked_topic_icon))}}
       <div class="desc">
         {{{i18n "unlock.settings.locked_topic_icon.desc"}}}
       </div>
@@ -59,7 +59,7 @@
         {{i18n "unlock.settings.unlocked_group_name.label"}}
     </div>
     <div class="setting-value">
-      {{text-field value=model.unlocked_group_name maxlength="20"}}
+      {{text-field value=unlocked_group_name maxlength="20"}}
       <div class="desc">
         {{{i18n "unlock.settings.unlocked_group_name.desc"}}}
       </div>
@@ -70,7 +70,7 @@
         {{i18n "unlock.settings.unlocked_user_flair_icon.label"}}
     </div>
     <div class="setting-value">
-      {{icon-picker value=model.unlocked_user_flair_icon options=(hash maximum=1) onChange=(action (mut model.unlocked_user_flair_icon))}}
+      {{icon-picker value=unlocked_user_flair_icon options=(hash maximum=1) onChange=(action (mut unlocked_user_flair_icon))}}
       <div class="desc">
         {{{i18n "unlock.settings.unlocked_user_flair_icon.desc"}}}
       </div>
@@ -78,4 +78,4 @@
   </div>
 </section>
 
-{{save-controls model=model action=(action "save") saved=saved}}
+{{save-controls model=this action=(action "save") saved=saved}}
