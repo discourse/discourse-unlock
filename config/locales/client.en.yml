@@ -1,0 +1,28 @@
+en:
+  js:
+    unlock:
+      title: "Unlocked"
+      save: "Save"
+      locked: "This topic is locked"
+      settings:
+        lock_name:
+          label: "Lock name"
+          desc: "A word or a short sentence that describe what the lock give you access (eg: gov, premium membership, OG, contributors...)"
+        lock_address:
+          label: "Lock address"
+          desc: "To create your lock, please read this <a target='_blank' href='https://docs.unlock-protocol.com/'>doc</a>"
+        lock_network:
+          label: "Network"
+          desc: "Network Id (1 is mainnet, 4 is rinkeby). Read this doc for more information"
+        locked_categories:
+          label: "Locked categories"
+          desc: "Topics posted in these categories are restricted for unlocked users. Locked users can see the topic titles but the content is blocked behind the unlock paywall"
+        locked_topic_icon:
+          label: "Locked topic icon"
+          desc: "Icon next to locked topics title to easily distinguish them from others topics"
+        unlocked_group_name:
+          label: "Unlocked group name"
+          desc: "Unlocked users will be added to this <a href='/groups'>group</a>. Group name will be displayed next to their username"
+        unlocked_user_flair_icon:
+          label: "Unlocked user flair icon"
+          desc: "Icon added on unlcoked users profile pic, to easily distinguish them from other users"
