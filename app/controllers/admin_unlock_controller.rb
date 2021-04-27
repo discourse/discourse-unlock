@@ -2,12 +2,10 @@
 
 class AdminUnlockController < Admin::AdminController
   def index
-    render json: PluginStore.get(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS)
+    render json: ::Unlock.settings
   end
 
   def update
-    name = params[:lock_name].presence
-
     address = params[:lock_address].presence || ""
     address = address[/0x\h{40}/i]&.downcase
 
@@ -27,6 +25,8 @@ class AdminUnlockController < Admin::AdminController
 
     if group_name.present?
       group = Group.find_or_create_by!(name: group_name)
+      group.primary_group = true
+      group.title = group_name
       group.flair_icon = flair_icon
       group.save!
     end
@@ -41,7 +41,6 @@ class AdminUnlockController < Admin::AdminController
     end
 
     PluginStore.set(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS, {
-      lock_name: name,
       lock_address: address,
       lock_network: network,
       locked_category_ids: categories.pluck(:id),
@@ -49,6 +48,8 @@ class AdminUnlockController < Admin::AdminController
       unlocked_group_name: group_name,
       unlocked_user_flair_icon: flair_icon,
     })
+
+    ::Unlock.clear_cache
 
     render json: success_json
   end

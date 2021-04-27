@@ -30,12 +30,12 @@ export default {
 
       api.modifyClass("model:post-stream", {
         errorLoading(result) {
-          const { status, requestedUrl } = result.jqXHR;
-          const { lock } = result.jqXHR.responseJSON;
+          const { status } = result.jqXHR;
+          const { lock, url } = result.jqXHR.responseJSON;
 
           if (status === 402 && lock) {
             if (api.container.lookup("current-user:main")) {
-              window._requestedUrl = requestedUrl.replace(/\.json$/, "");
+              window._redirectUrl = url;
               return window.unlockProtocol.loadCheckoutModal();
             } else {
               return api.container.lookup("route:application").replaceWith("login");
@@ -46,13 +46,21 @@ export default {
         }
       });
 
+      function redirect(url) {
+        if (url.startsWith("http")) {
+          document.location.replace(url);
+        } else {
+          return DiscourseURL.handleURL(url, { replaceURL: true });
+        }
+      }
+
       const settings = PreloadStore.get("lock");
 
       if (settings && settings.lock_address) {
         window.addEventListener("unlockProtocol.status", ({ detail }) => {
           const { state } = detail;
 
-          if (state === "unlocked" && window._requestedUrl) {
+          if (state === "unlocked" && window._redirectUrl) {
             if (window._wallet && window._transaction) {
               return ajax("/unlock.json", {
                 type: "POST",
@@ -61,11 +69,9 @@ export default {
                   wallet: window._wallet,
                   transaction: window._transaction,
                 }
-              }).then(() => {
-                return DiscourseURL.handleURL(window._requestedUrl, { replaceURL: true });
-              });
+              }).then(() => redirect(window._redirectUrl));
             } else {
-              return DiscourseURL.handleURL(window._requestedUrl, { replaceURL: true });
+              return redirect(window._redirectUrl);
             }
           }
         })
@@ -84,7 +90,7 @@ export default {
         window.unlockProtocolConfig = {
           network: settings.lock_network || 4,
           locks: {
-            [settings.lock_address]: { name: settings.lock_name || "" }
+            [settings.lock_address]: { }
           }
         };
 

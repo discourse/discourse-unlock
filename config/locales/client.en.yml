@@ -5,9 +5,6 @@ en:
       save: "Save"
       locked: "This topic is locked"
       settings:
-        lock_name:
-          label: "Lock name"
-          desc: "A word or a short sentence that describe what the lock give you access (eg: gov, premium membership, OG, contributors...)"
         lock_address:
           label: "Lock address"
           desc: "To create your lock, please read this <a target='_blank' href='https://docs.unlock-protocol.com/'>doc</a>"

@@ -17,6 +17,18 @@ module ::Unlock
   SETTINGS    ||= "settings"
   TRANSACTION ||= "transaction"
 
+  require_dependency "distributed_cache"
+
+  @cache = ::DistributedCache.new("discourse-unlock")
+
+  def self.settings
+    @cache[SETTINGS] ||= PluginStore.get(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS)
+  end
+
+  def self.clear_cache
+    @cache.clear
+  end
+
   def self.is_locked?(guardian, topic)
     return false if guardian.is_admin?
     return false if topic.category&.custom_fields&.[](CF_LOCK_ADDRESS).blank?
@@ -77,8 +89,8 @@ after_initialize do
     def preload_json
       super
 
-      if settings = PluginStore.get(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS)
-        store_preloaded("lock", MultiJson.dump(settings.slice("lock_network", "lock_address", "lock_name")))
+      if settings = ::Unlock.settings
+        store_preloaded("lock", MultiJson.dump(settings.slice("lock_network", "lock_address")))
       end
     end
   end
@@ -87,12 +99,16 @@ after_initialize do
 
   class ::ApplicationController
     rescue_from ::Unlock::NoAccessLocked do
-      topic_id = params["topic_id"] || params["id"]
-      topic = Topic.find_by(id: topic_id) if topic_id
-      response = { error: "Payment Required" }
-      response[:lock] = topic.category.custom_fields[::Unlock::CF_LOCK_ADDRESS] if topic
-
       if request.format.json?
+        response = { error: "Payment Required" }
+
+        if topic_id = params["topic_id"] || params["id"]
+          if topic = Topic.find_by(id: topic_id)
+            response[:lock] = topic.category.custom_fields[::Unlock::CF_LOCK_ADDRESS]
+            response[:url] = topic.relative_url
+          end
+        end
+
         render_json_dump response, status: 402
       else
         rescue_discourse_actions(:payment_required, 402, include_ember: true)
@@ -100,7 +116,7 @@ after_initialize do
     end
   end
 
-  if settings = PluginStore.get(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS)
+  if settings = ::Unlock.settings
     if flair_icon = settings["unlocked_users_flair_icon"].presence
       register_svg_icon flair_icon
     end

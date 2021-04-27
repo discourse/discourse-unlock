@@ -7,7 +7,7 @@ class UnlockController < ApplicationController
     transaction = params.require(:transaction)
 
     return unless current_user
-    return unless settings = PluginStore.get(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS)
+    return unless settings = ::Unlock.settings
     return if settings["lock_address"].blank? || settings["lock_address"] != lock.downcase
     return unless group = Group.find_by(name: settings["unlocked_group_name"])
 
