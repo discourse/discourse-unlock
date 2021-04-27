@@ -4,6 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import loadScript from "discourse/lib/load-script";
 import PreloadStore from "discourse/lib/preload-store";
 import { ajax } from "discourse/lib/ajax";
+import DiscourseURL from "discourse/lib/url";
 
 export default {
   name: "apply-unlock",
