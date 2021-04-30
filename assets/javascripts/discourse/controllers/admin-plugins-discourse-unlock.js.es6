@@ -3,15 +3,23 @@ import { ajax } from "discourse/lib/ajax";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
+import Group from "discourse/models/group";
 
 export default Controller.extend({
   lockedCategories: computed("model.locked_category_ids", function() {
-    return Category.findByIds(this.model.locked_category_ids);
+    const { locked_category_ids } = this.model;
+    return locked_category_ids && locked_category_ids.length > 0 ?
+      Category.findByIds(locked_category_ids) :
+      [];
   }),
 
   @action
   changeLockedCategories(categories) {
     this.set("model.locked_category_ids", categories.mapBy("id"));
+  },
+
+  groupFinder(term) {
+    return Group.findAll({ term });
   },
 
   @action
@@ -24,7 +32,6 @@ export default Controller.extend({
       locked_category_ids,
       locked_topic_icon,
       unlocked_group_name,
-      unlocked_user_flair_icon,
     } = this.model;
 
     return ajax("/admin/plugins/discourse-unlock.json", {
@@ -35,7 +42,6 @@ export default Controller.extend({
         locked_category_ids,
         locked_topic_icon,
         unlocked_group_name,
-        unlocked_user_flair_icon,
       },
     })
     .then(() => this.set("saved", true))

@@ -47,14 +47,6 @@ export default {
         }
       });
 
-      function redirect(url) {
-        if (url.startsWith("http")) {
-          document.location.replace(url);
-        } else {
-          return DiscourseURL.handleURL(url, { replaceURL: true });
-        }
-      }
-
       const settings = PreloadStore.get("lock");
 
       if (settings && settings.lock_address) {
@@ -62,18 +54,12 @@ export default {
           const { state } = detail;
 
           if (state === "unlocked" && window._redirectUrl) {
-            if (window._wallet && window._transaction) {
-              return ajax("/unlock.json", {
-                type: "POST",
-                data: {
-                  lock: window._lock,
-                  wallet: window._wallet,
-                  transaction: window._transaction,
-                }
-              }).then(() => redirect(window._redirectUrl));
-            } else {
-              return redirect(window._redirectUrl);
-            }
+            const data = { lock: window._lock || settings.lock_address };
+            if (window._wallet) data["wallet"] = window._wallet;
+            if (window._transaction) data["transaction"] = window._transaction;
+
+            return ajax("/unlock.json", { type: "POST", data })
+              .then(() => document.location.replace(document.location.origin + window._redirectUrl));
           }
         })
 

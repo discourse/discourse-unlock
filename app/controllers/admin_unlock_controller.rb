@@ -17,27 +17,17 @@ class AdminUnlockController < Admin::AdminController
 
     topic_icon = params[:locked_topic_icon].presence
 
-    group_name = (params[:unlocked_group_name].presence || "").strip[0..20].presence
+    group_name = Group.where(name: params[:unlocked_group_name]).limit(1).pluck(:name).first
 
-    flair_icon = params[:unlocked_user_flair_icon].presence
+    categories.each do |category|
+      category.custom_fields[::Unlock::CF_LOCK_ADDRESS] = address
 
-    group = nil
+      category.custom_fields[::Unlock::CF_LOCK_ICON] = topic_icon || "key"
 
-    if group_name.present?
-      group = Group.find_or_create_by!(name: group_name)
-      group.primary_group = true
-      group.title = group_name
-      group.flair_icon = flair_icon
-      group.save!
-    end
+      group_names = ((category.custom_fields[::Unlock::CF_LOCK_GROUPS] || "").split(",") << group_name).uniq
+      category.custom_fields[::Unlock::CF_LOCK_GROUPS] = Group.where(name: group_names).pluck(:name).join(",")
 
-    if group
-      categories.each do |category|
-        category.custom_fields[::Unlock::CF_LOCK_ADDRESS] = address
-        category.custom_fields[::Unlock::CF_LOCK_ICON] = topic_icon.presence || "key"
-        category.custom_fields[::Unlock::CF_LOCK_GROUPS] = ((category.custom_fields[::Unlock::CF_LOCK_GROUPS] || "").split(",") << group.name).uniq.join(",")
-        category.save!
-      end
+      category.save!
     end
 
     PluginStore.set(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS, {
@@ -46,7 +36,6 @@ class AdminUnlockController < Admin::AdminController
       locked_category_ids: categories.pluck(:id),
       locked_topic_icon: topic_icon,
       unlocked_group_name: group_name,
-      unlocked_user_flair_icon: flair_icon,
     })
 
     ::Unlock.clear_cache

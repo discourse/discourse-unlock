@@ -23,6 +23,17 @@
   </div>
   <div class="row setting">
     <div class="setting-label">
+        {{i18n "unlock.settings.unlocked_group_name.label"}}
+    </div>
+    <div class="setting-value">
+      {{group-selector groupNames=model.unlocked_group_name single="true" groupFinder=groupFinder}}
+      <div class="desc">
+        {{{i18n "unlock.settings.unlocked_group_name.desc"}}}
+      </div>
+    </div>
+  </div>
+  <div class="row setting">
+    <div class="setting-label">
         {{i18n "unlock.settings.locked_categories.label"}}
     </div>
     <div class="setting-value">
@@ -40,28 +51,6 @@
       {{icon-picker value=model.locked_topic_icon options=(hash maximum=1) onChange=(action (mut model.locked_topic_icon))}}
       <div class="desc">
         {{{i18n "unlock.settings.locked_topic_icon.desc"}}}
-      </div>
-    </div>
-  </div>
-  <div class="row setting">
-    <div class="setting-label">
-        {{i18n "unlock.settings.unlocked_group_name.label"}}
-    </div>
-    <div class="setting-value">
-      {{text-field value=model.unlocked_group_name maxlength="20"}}
-      <div class="desc">
-        {{{i18n "unlock.settings.unlocked_group_name.desc"}}}
-      </div>
-    </div>
-  </div>
-  <div class="row setting">
-    <div class="setting-label">
-        {{i18n "unlock.settings.unlocked_user_flair_icon.label"}}
-    </div>
-    <div class="setting-value">
-      {{icon-picker value=model.unlocked_user_flair_icon options=(hash maximum=1) onChange=(action (mut model.unlocked_user_flair_icon))}}
-      <div class="desc">
-        {{{i18n "unlock.settings.unlocked_user_flair_icon.desc"}}}
       </div>
     </div>
   </div>

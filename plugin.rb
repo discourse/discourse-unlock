@@ -22,7 +22,7 @@ module ::Unlock
   @cache = ::DistributedCache.new("discourse-unlock")
 
   def self.settings
-    @cache[SETTINGS] ||= PluginStore.get(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS)
+    @cache[SETTINGS] ||= PluginStore.get(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS) || {}
   end
 
   def self.clear_cache

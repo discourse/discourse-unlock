@@ -18,8 +18,5 @@ en:
           label: "Locked topic icon"
           desc: "Icon next to locked topics title to easily distinguish them from others topics"
         unlocked_group_name:
-          label: "Unlocked group name"
-          desc: "Unlocked users will be added to this <a href='/groups'>group</a>. Group name will be displayed next to their username"
-        unlocked_user_flair_icon:
-          label: "Unlocked user flair icon"
-          desc: "Icon added on unlcoked users profile pic, to easily distinguish them from other users"
+          label: "Unlocked group"
+          desc: "Unlocked users will be added to this <a href='/groups'>group</a>."

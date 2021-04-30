@@ -3,8 +3,8 @@
 class UnlockController < ApplicationController
   def unlock
     lock = params.require(:lock)
-    wallet = params.require(:wallet)
-    transaction = params.require(:transaction)
+    wallet = params[:wallet]
+    transaction = params[:transaction]
 
     return unless current_user
     return unless settings = ::Unlock.settings
@@ -13,11 +13,9 @@ class UnlockController < ApplicationController
 
     group.users << current_user
 
-    value = {
-      lock: lock,
-      wallet: wallet,
-      transaction: transaction,
-    }
+    value = { lock: lock }
+    value[:wallet] = wallet if wallet.present?
+    value[:transaction] = transaction if transaction.present?
 
     PluginStore.set(::Unlock::PLUGIN_NAME, "#{::Unlock::TRANSACTION}_#{current_user.id}", value)
 
