@@ -1,6 +1,6 @@
 # name: discourse-unlock
 # about: A plugin to integrate the unlock protocol into your Discourse
-# version: 0.0.1
+# version: 0.0.2
 # authors: zogstrip
 # url: https://github.com/zogstrip/discourse-unlock
 
@@ -11,7 +11,7 @@ module ::Unlock
 
   CF_LOCK_ADDRESS ||= "unlock-lock"
   CF_LOCK_ICON    ||= "unlock-icon"
-  CF_LOCK_GROUPS  ||= "unlock-groups"
+  CF_LOCK_GROUP   ||= "unlock-group"
 
   PLUGIN_NAME ||= "unlocked"
   SETTINGS    ||= "settings"
@@ -32,9 +32,7 @@ module ::Unlock
   def self.is_locked?(guardian, topic)
     return false if guardian.is_admin?
     return false if topic.category&.custom_fields&.[](CF_LOCK_ADDRESS).blank?
-
-    group_names = (topic.category.custom_fields[CF_LOCK_GROUPS] || "").split(",")
-    !guardian&.user&.groups&.where(name: group_names)&.exists?
+    !guardian&.user&.groups&.where(name: topic.category.custom_fields[CF_LOCK_GROUP])&.exists?
   end
 end
 
@@ -113,16 +111,6 @@ after_initialize do
       else
         rescue_discourse_actions(:payment_required, 402, include_ember: true)
       end
-    end
-  end
-
-  if settings = ::Unlock.settings
-    if flair_icon = settings["unlocked_users_flair_icon"].presence
-      register_svg_icon flair_icon
-    end
-
-    if topic_icon = settings["locked_topics_icon"].presence
-      register_svg_icon topic_icon
     end
   end
 end

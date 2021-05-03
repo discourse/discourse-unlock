@@ -15,19 +15,36 @@ class AdminUnlockController < Admin::AdminController
     category_ids = params[:locked_category_ids]
     categories = Category.where(id: category_ids)
 
-    topic_icon = params[:locked_topic_icon].presence
+    if topic_icon = params[:locked_topic_icon].presence
+      SvgSprite.expire_cache if DiscoursePluginRegistry.svg_icons.add?(topic_icon)
+    end
+
+    settings = ::Unlock.settings
+
+    CategoryCustomField
+      .where(category_id: settings["locked_category_ids"])
+      .where(name: [::Unlock::CF_LOCK_ADDRESS, ::Unlock::CF_LOCK_ICON, ::Unlock::CF_LOCK_GROUP])
+      .delete_all
+
+    CategoryGroup
+      .where(category_id: settings["locked_category_ids"])
+      .where(group_id: 0)
+      .where(permission_type: CategoryGroup.permission_types[:readonly])
+      .update_all(permission_type: CategoryGroup.permission_types[:full])
 
     group_name = Group.where(name: params[:unlocked_group_name]).limit(1).pluck(:name).first
 
-    categories.each do |category|
-      category.custom_fields[::Unlock::CF_LOCK_ADDRESS] = address
+    if address
+      categories.each do |category|
+        cg = CategoryGroup.find_or_create_by(category: category, group_id: 0)
+        cg.permission_type = CategoryGroup.permission_types[:readonly]
+        cg.save!
 
-      category.custom_fields[::Unlock::CF_LOCK_ICON] = topic_icon || "key"
-
-      group_names = ((category.custom_fields[::Unlock::CF_LOCK_GROUPS] || "").split(",") << group_name).uniq
-      category.custom_fields[::Unlock::CF_LOCK_GROUPS] = Group.where(name: group_names).pluck(:name).join(",")
-
-      category.save!
+        category.custom_fields[::Unlock::CF_LOCK_ADDRESS] = address
+        category.custom_fields[::Unlock::CF_LOCK_ICON] = topic_icon || "key"
+        category.custom_fields[::Unlock::CF_LOCK_GROUP] = group_name
+        category.save!
+      end
     end
 
     PluginStore.set(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS, {

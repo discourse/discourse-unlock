@@ -4,6 +4,7 @@ en:
       title: "Unlocked"
       save: "Save"
       locked: "This topic is locked"
+      category_security_warning: "This category is locked, please don't change the security settings for the \"everyone\" group."
       settings:
         lock_address:
           label: "Lock address"
