@@ -10,7 +10,7 @@ class AdminUnlockController < Admin::AdminController
     address = address[/0x\h{40}/i]&.downcase
 
     network = params[:lock_network].to_i
-    network = 4 if network != 1
+    network = network > 0 ? network : 4
 
     category_ids = params[:locked_category_ids]
     categories = Category.where(id: category_ids)
