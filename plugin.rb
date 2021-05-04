@@ -88,7 +88,7 @@ after_initialize do
       super
 
       if settings = ::Unlock.settings
-        store_preloaded("lock", MultiJson.dump(settings.slice("lock_network", "lock_address")))
+        store_preloaded("lock", MultiJson.dump(settings.slice("lock_network", "lock_address", "lock_icon", "lock_call_to_action")))
       end
     end
   end

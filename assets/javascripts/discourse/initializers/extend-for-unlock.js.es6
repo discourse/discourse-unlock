@@ -78,6 +78,10 @@ export default {
           network: settings.lock_network || 4,
           locks: {
             [settings.lock_address]: { }
+          },
+          icon: settings.lock_icon,
+          callToAction: {
+            default: settings.lock_call_to_action
           }
         };
 

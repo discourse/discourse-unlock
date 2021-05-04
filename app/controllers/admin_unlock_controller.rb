@@ -12,6 +12,10 @@ class AdminUnlockController < Admin::AdminController
     network = params[:lock_network].to_i
     network = network > 0 ? network : 4
 
+    icon = params[:lock_icon].presence || ""
+
+    cta = params[:lock_call_to_action].presence || ""
+
     category_ids = params[:locked_category_ids]
     categories = Category.where(id: category_ids)
 
@@ -50,6 +54,8 @@ class AdminUnlockController < Admin::AdminController
     PluginStore.set(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS, {
       lock_address: address,
       lock_network: network,
+      lock_icon: icon,
+      lock_call_to_action: cta,
       locked_category_ids: categories.pluck(:id),
       locked_topic_icon: topic_icon,
       unlocked_group_name: group_name,

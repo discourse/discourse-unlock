@@ -29,6 +29,8 @@ export default Controller.extend({
     const {
       lock_address,
       lock_network,
+      lock_icon,
+      lock_call_to_action,
       locked_category_ids,
       locked_topic_icon,
       unlocked_group_name,
@@ -39,6 +41,8 @@ export default Controller.extend({
       data: {
         lock_address,
         lock_network,
+        lock_icon,
+        lock_call_to_action,
         locked_category_ids,
         locked_topic_icon,
         unlocked_group_name,

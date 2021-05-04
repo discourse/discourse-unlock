@@ -12,6 +12,12 @@ en:
         lock_network:
           label: "Network"
           desc: "Network Id (1 is mainnet, 4 is rinkeby). Read this doc for more information"
+        lock_icon:
+          label: "Icon"
+          desc: "URL to the icon you want to use for the lock (JPG, PNG or GIF)"
+        lock_call_to_action:
+          label: "Call To Action"
+          desc: "Text show to the user when they are about to buy the lock"
         locked_categories:
           label: "Locked categories"
           desc: "Topics posted in these categories are restricted for unlocked users. Locked users can see the topic titles but the content is blocked behind the unlock paywall"
@@ -20,4 +26,4 @@ en:
           desc: "Icon next to locked topics title to easily distinguish them from others topics"
         unlocked_group_name:
           label: "Unlocked group"
-          desc: "Unlocked users will be added to this <a href='/groups'>group</a>."
+          desc: "Unlocked users will be added to this <a href='/groups'>group</a>"

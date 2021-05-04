@@ -23,6 +23,28 @@
   </div>
   <div class="row setting">
     <div class="setting-label">
+        {{i18n "unlock.settings.lock_icon.label"}}
+    </div>
+    <div class="setting-value">
+      {{text-field value=model.lock_icon placeholder="https://..."}}
+      <div class="desc">
+        {{{i18n "unlock.settings.lock_icon.desc"}}}
+      </div>
+    </div>
+  </div>
+  <div class="row setting">
+    <div class="setting-label">
+        {{i18n "unlock.settings.lock_call_to_action.label"}}
+    </div>
+    <div class="setting-value">
+      {{text-field value=model.lock_call_to_action placeholder="Purchase your NFT membership now!"}}
+      <div class="desc">
+        {{{i18n "unlock.settings.lock_call_to_action.desc"}}}
+      </div>
+    </div>
+  </div>
+  <div class="row setting">
+    <div class="setting-label">
         {{i18n "unlock.settings.unlocked_group_name.label"}}
     </div>
     <div class="setting-value">
