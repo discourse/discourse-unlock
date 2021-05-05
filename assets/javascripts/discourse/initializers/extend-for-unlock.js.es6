@@ -16,7 +16,7 @@ export default {
         statuses() {
           const results = this._super();
 
-          if (this.topic.category.lock) {
+          if (this.topic.category?.lock) {
             results.push({
               openTag: "span",
               closeTag: "span",
