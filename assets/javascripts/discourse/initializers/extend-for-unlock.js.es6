@@ -4,7 +4,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import loadScript from "discourse/lib/load-script";
 import PreloadStore from "discourse/lib/preload-store";
 import { ajax } from "discourse/lib/ajax";
-import DiscourseURL from "discourse/lib/url";
+
+const UNLOCK_URL = "https://paywall.unlock-protocol.com/static/unlock.latest.min.js";
 
 export default {
   name: "apply-unlock",
@@ -34,13 +35,15 @@ export default {
           const { status } = result.jqXHR;
           const { lock, url } = result.jqXHR.responseJSON;
 
-          if (status === 402 && lock && window.unlockProtocol) {
-            if (api.container.lookup("current-user:main")) {
-              window._redirectUrl = url;
-              return window.unlockProtocol.loadCheckoutModal();
-            } else {
-              return api.container.lookup("route:application").replaceWith("login");
-            }
+          if (status === 402 && lock) {
+            return loadScript(UNLOCK_URL).then(() => {
+              if (api.container.lookup("current-user:main")) {
+                window._redirectUrl = url;
+                return window.unlockProtocol.loadCheckoutModal();
+              } else {
+                return api.container.lookup("route:application").replaceWith("login");
+              }
+            });
           } else {
             return this._super(result);
           }
@@ -85,7 +88,8 @@ export default {
           }
         };
 
-        Ember.run.next(() => loadScript("https://paywall.unlock-protocol.com/static/unlock.latest.min.js"));
+        // preload unlock script
+        Ember.run.next(() => loadScript(UNLOCK_URL));
       }
     });
   }
