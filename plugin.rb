@@ -42,6 +42,8 @@ after_initialize do
     "../app/controllers/admin_unlock_controller.rb",
   ].each { |path| require File.expand_path(path, __FILE__) }
 
+  extend_content_security_policy script_src: ["https://paywall.unlock-protocol.com/static/unlock.latest.min.js"]
+
   add_admin_route "unlock.title", "discourse-unlock"
 
   Discourse::Application.routes.append do

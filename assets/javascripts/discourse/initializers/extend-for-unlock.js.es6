@@ -34,7 +34,7 @@ export default {
           const { status } = result.jqXHR;
           const { lock, url } = result.jqXHR.responseJSON;
 
-          if (status === 402 && lock) {
+          if (status === 402 && lock && window.unlockProtocol) {
             if (api.container.lookup("current-user:main")) {
               window._redirectUrl = url;
               return window.unlockProtocol.loadCheckoutModal();
@@ -42,7 +42,7 @@ export default {
               return api.container.lookup("route:application").replaceWith("login");
             }
           } else {
-            return this._super();
+            return this._super(result);
           }
         }
       });
@@ -61,18 +61,18 @@ export default {
             return ajax("/unlock.json", { type: "POST", data })
               .then(() => document.location.replace(document.location.origin + window._redirectUrl));
           }
-        })
+        });
 
         window.addEventListener("unlockProtocol.authenticated", ({ detail }) => {
           const { address } = detail;
           window._wallet = address;
-        })
+        });
 
         window.addEventListener("unlockProtocol.transactionSent", ({ detail }) => {
           const { hash, lock } = detail;
           window._transaction = hash;
           window._lock = lock;
-        })
+        });
 
         window.unlockProtocolConfig = {
           network: settings.lock_network || 4,
@@ -85,7 +85,7 @@ export default {
           }
         };
 
-        Ember.run.next(() => loadScript("/plugins/discourse-unlock/javascripts/unlock.js"));
+        Ember.run.next(() => loadScript("https://paywall.unlock-protocol.com/static/unlock.latest.min.js"));
       }
     });
   }
