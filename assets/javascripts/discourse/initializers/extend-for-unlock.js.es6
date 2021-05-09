@@ -7,6 +7,13 @@ import { ajax } from "discourse/lib/ajax";
 
 const UNLOCK_URL = "https://paywall.unlock-protocol.com/static/unlock.latest.min.js";
 
+function reset() {
+  window._redirectUrl = null;
+  window._lock = null;
+  window._wallet = null;
+  window._transaction = null;
+}
+
 export default {
   name: "apply-unlock",
 
@@ -50,13 +57,17 @@ export default {
         }
       });
 
+      reset();
+
       const settings = PreloadStore.get("lock");
 
       if (settings && settings.lock_address) {
         window.addEventListener("unlockProtocol.status", ({ detail }) => {
           const { state } = detail;
 
-          if (state === "unlocked" && window._redirectUrl) {
+          if (state === "locked") {
+            reset();
+          } else if (state === "unlocked" && window._redirectUrl) {
             const data = { lock: window._lock || settings.lock_address };
             if (window._wallet) data["wallet"] = window._wallet;
             if (window._transaction) data["transaction"] = window._transaction;
