@@ -43,14 +43,12 @@ export default {
           const { lock, url } = result.jqXHR.responseJSON;
 
           if (status === 402 && lock) {
-            return loadScript(UNLOCK_URL).then(() => {
-              if (api.container.lookup("current-user:main")) {
-                window._redirectUrl = url;
-                return window.unlockProtocol.loadCheckoutModal();
-              } else {
-                return api.container.lookup("route:application").replaceWith("login");
-              }
-            });
+            if (api.container.lookup("current-user:main")) {
+              window._redirectUrl = url;
+              return loadScript(UNLOCK_URL).then(() => window.unlockProtocol.loadCheckoutModal());
+            } else {
+              return api.container.lookup("route:application").replaceWith("login");
+            }
           } else {
             return this._super(result);
           }
@@ -65,15 +63,19 @@ export default {
         window.addEventListener("unlockProtocol.status", ({ detail }) => {
           const { state } = detail;
 
-          if (state === "locked") {
-            reset();
-          } else if (state === "unlocked" && window._redirectUrl) {
-            const data = { lock: window._lock || settings.lock_address };
-            if (window._wallet) data["wallet"] = window._wallet;
+          if (state === "unlocked" && window._redirectUrl && window._wallet) {
+            const data = {
+              lock: window._lock || settings.lock_address,
+              wallet: window._wallet,
+            };
+
             if (window._transaction) data["transaction"] = window._transaction;
 
-            return ajax("/unlock.json", { type: "POST", data })
-              .then(() => document.location.replace(document.location.origin + window._redirectUrl));
+            const url = document.location.origin + window._redirectUrl;
+
+            reset();
+
+            return ajax("/unlock.json", { type: "POST", data }).then(() => document.location.replace(url));
           }
         });
 
