@@ -8,22 +8,22 @@ en:
       settings:
         lock_address:
           label: "Lock address"
-          desc: "To create your lock, please read this <a target='_blank' href='https://docs.unlock-protocol.com/'>doc</a>"
+          desc: "To create a lock, please check the <a target='_blank' href='https://unlock.community/t/unlock-discourse-plugin-step-by-step-guide/64/2'>step-by-step guide</a>"
         lock_network:
           label: "Network"
-          desc: "Network Id (1 is mainnet, 4 is rinkeby). Read this doc for more information"
+          desc: "Network ID (1 for mainnnet, 4 for rinkeby, 100 for Xdai)"
         lock_icon:
           label: "Icon"
-          desc: "URL to the icon you want to use for the lock (JPG, PNG or GIF)"
+          desc: "Icon url added on the paywall (JPG, PNG or GIF). By default it's the unlock logo"
         lock_call_to_action:
           label: "Call To Action"
-          desc: "Text show to the user when they are about to buy the lock"
+          desc: "A description of the lock added on the paywall. Sentence by default : "Purchase your NFT membership now!""
         locked_categories:
           label: "Locked categories"
-          desc: "Topics posted in these categories are restricted for unlocked users. Locked users can see the topic titles but the content is blocked behind the unlock paywall"
+          desc: "Topics posted in these categories are restricted to the unlocked group members. Others users can see the topic titles but the content is blocked behind the unlock paywall."
         locked_topic_icon:
           label: "Locked topic icon"
           desc: "Icon next to locked topics title to easily distinguish them from others topics"
         unlocked_group_name:
           label: "Unlocked group"
-          desc: "Unlocked users will be added to this <a href='/groups'>group</a>"
+          desc: "Unlocked group : Create a <a href='/groups'>group</a>" and select it. People that bought the NFT trough the paywall or own the NFT will be automatically added to this group"
