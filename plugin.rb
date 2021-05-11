@@ -2,7 +2,7 @@
 # about: A plugin to integrate the unlock protocol into your Discourse
 # version: 0.0.2
 # authors: zogstrip
-# url: https://github.com/zogstrip/discourse-unlock
+# url: https://github.com/camillebesse/discourse-unlock
 
 register_asset "stylesheets/unlocked.scss"
 
