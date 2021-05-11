@@ -17,7 +17,7 @@ en:
           desc: "Icon url added on the paywall (JPG, PNG or GIF). By default it's the unlock logo"
         lock_call_to_action:
           label: "Call To Action"
-          desc: "A description of the lock added on the paywall. Sentence by default : "Purchase your NFT membership now!""
+          desc: "A description of the lock added on the paywall. Sentence by default : Purchase your NFT membership now!"
         locked_categories:
           label: "Locked categories"
           desc: "Topics posted in these categories are restricted to the unlocked group members. Others users can see the topic titles but the content is blocked behind the unlock paywall."
