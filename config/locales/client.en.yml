@@ -26,4 +26,4 @@ en:
           desc: "Icon next to locked topics title to easily distinguish them from others topics"
         unlocked_group_name:
           label: "Unlocked group"
-          desc: "Create a <a href='/groups'>group</a>" and select it. People that bought the NFT trough the paywall or own the NFT will be automatically added to this group"
+          desc: "Create a <a href='/groups'>group</a> and select it. People that bought the NFT trough the paywall or own the NFT will be automatically added to this group"
