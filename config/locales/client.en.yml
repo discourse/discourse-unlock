@@ -4,7 +4,7 @@ en:
       title: "Unlock"
       save: "Save"
       locked: "This topic is locked"
-      category_security_warning: "This category is locked, please don't change the security settings for the \"everyone\" group."
+      category_security_warning: "This category is locked with the <a href='/admin/plugins/discourse-unlock'>unlock plugin</a>, please don't change the security settings for the \"everyone\" group."
       settings:
         lock_address:
           label: "Lock address"
