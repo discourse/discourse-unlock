@@ -1,1 +1,1 @@
-Please check the doc : https://unlock.community/t/unlock-discourse-plugin-step-by-step-guide/64
+Please check the doc : https://meta.discourse.org/t/unlock-discourse-plugin-lock-topics-behind-a-crypto-paywall/194801
