@@ -52,6 +52,9 @@ after_initialize do
     post "/unlock" => "unlock#unlock"
   end
 
+  register_category_custom_field_type(::Unlock::CF_LOCK_ADDRESS, :string)
+  register_category_custom_field_type(::Unlock::CF_LOCK_ICON, :string)
+
   Site.preloaded_category_custom_fields << ::Unlock::CF_LOCK_ADDRESS
   Site.preloaded_category_custom_fields << ::Unlock::CF_LOCK_ICON
 
