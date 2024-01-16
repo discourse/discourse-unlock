@@ -1,78 +1,92 @@
 <section class="form-horizontal settings">
   <div class="row setting">
     <div class="setting-label">
-        {{i18n "unlock.settings.lock_address.label"}}
+      {{i18n "unlock.settings.lock_address.label"}}
     </div>
     <div class="setting-value">
       {{text-field value=model.lock_address placeholder="0x..."}}
       <div class="desc">
-        {{{i18n "unlock.settings.lock_address.desc"}}}
+        {{html-safe (i18n "unlock.settings.lock_address.desc")}}
       </div>
     </div>
   </div>
   <div class="row setting">
     <div class="setting-label">
-        {{i18n "unlock.settings.lock_network.label"}}
+      {{i18n "unlock.settings.lock_network.label"}}
     </div>
     <div class="setting-value">
       {{text-field value=model.lock_network}}
       <div class="desc">
-        {{{i18n "unlock.settings.lock_network.desc"}}}
+        {{i18n "unlock.settings.lock_network.desc"}}
       </div>
     </div>
   </div>
   <div class="row setting">
     <div class="setting-label">
-        {{i18n "unlock.settings.lock_icon.label"}}
+      {{i18n "unlock.settings.lock_icon.label"}}
     </div>
     <div class="setting-value">
       {{text-field value=model.lock_icon placeholder="https://..."}}
       <div class="desc">
-        {{{i18n "unlock.settings.lock_icon.desc"}}}
+        {{i18n "unlock.settings.lock_icon.desc"}}
       </div>
     </div>
   </div>
   <div class="row setting">
     <div class="setting-label">
-        {{i18n "unlock.settings.lock_call_to_action.label"}}
+      {{i18n "unlock.settings.lock_call_to_action.label"}}
     </div>
     <div class="setting-value">
-      {{text-field value=model.lock_call_to_action placeholder="Purchase your NFT membership now!"}}
+      {{text-field
+        value=model.lock_call_to_action
+        placeholder="Purchase your NFT membership now!"
+      }}
       <div class="desc">
-        {{{i18n "unlock.settings.lock_call_to_action.desc"}}}
+        {{i18n "unlock.settings.lock_call_to_action.desc"}}
       </div>
     </div>
   </div>
   <div class="row setting">
     <div class="setting-label">
-        {{i18n "unlock.settings.unlocked_group_name.label"}}
+      {{i18n "unlock.settings.unlocked_group_name.label"}}
     </div>
     <div class="setting-value">
-      {{group-selector groupNames=model.unlocked_group_name single="true" groupFinder=groupFinder}}
+      {{group-selector
+        groupNames=model.unlocked_group_name
+        single="true"
+        groupFinder=groupFinder
+      }}
       <div class="desc">
-        {{{i18n "unlock.settings.unlocked_group_name.desc"}}}
+        {{i18n "unlock.settings.unlocked_group_name.desc"}}
       </div>
     </div>
   </div>
   <div class="row setting">
     <div class="setting-label">
-        {{i18n "unlock.settings.locked_categories.label"}}
+      {{i18n "unlock.settings.locked_categories.label"}}
     </div>
     <div class="setting-value">
-      {{category-selector categories=lockedCategories onChange=(action "changeLockedCategories")}}
+      {{category-selector
+        categories=lockedCategories
+        onChange=(action "changeLockedCategories")
+      }}
       <div class="desc">
-        {{{i18n "unlock.settings.locked_categories.desc"}}}
+        {{i18n "unlock.settings.locked_categories.desc"}}
       </div>
     </div>
   </div>
   <div class="row setting">
     <div class="setting-label">
-        {{i18n "unlock.settings.locked_topic_icon.label"}}
+      {{i18n "unlock.settings.locked_topic_icon.label"}}
     </div>
     <div class="setting-value">
-      {{icon-picker value=model.locked_topic_icon options=(hash maximum=1) onChange=(action (mut model.locked_topic_icon))}}
+      {{icon-picker
+        value=model.locked_topic_icon
+        options=(hash maximum=1)
+        onChange=(action (mut model.locked_topic_icon))
+      }}
       <div class="desc">
-        {{{i18n "unlock.settings.locked_topic_icon.desc"}}}
+        {{i18n "unlock.settings.locked_topic_icon.desc"}}
       </div>
     </div>
   </div>

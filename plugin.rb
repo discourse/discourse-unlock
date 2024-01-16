@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # name: discourse-unlock
 # about: A plugin to integrate the unlock protocol into your Discourse
 # version: 0.1.0
@@ -7,14 +8,15 @@
 register_asset "stylesheets/unlocked.scss"
 
 module ::Unlock
-  class NoAccessLocked < StandardError; end
+  class NoAccessLocked < StandardError
+  end
 
   CF_LOCK_ADDRESS ||= "unlock-lock"
-  CF_LOCK_ICON    ||= "unlock-icon"
-  CF_LOCK_GROUP   ||= "unlock-group"
+  CF_LOCK_ICON ||= "unlock-icon"
+  CF_LOCK_GROUP ||= "unlock-group"
 
   PLUGIN_NAME ||= "unlocked"
-  SETTINGS    ||= "settings"
+  SETTINGS ||= "settings"
   TRANSACTION ||= "transaction"
 
   require_dependency "distributed_cache"
@@ -37,18 +39,22 @@ module ::Unlock
 end
 
 after_initialize do
-  [
-    "../app/controllers/unlock_controller.rb",
-    "../app/controllers/admin_unlock_controller.rb",
+  %w[
+    ../app/controllers/unlock_controller.rb
+    ../app/controllers/admin_unlock_controller.rb
   ].each { |path| require File.expand_path(path, __FILE__) }
 
-  extend_content_security_policy script_src: ["https://paywall.unlock-protocol.com/static/unlock.latest.min.js"]
+  extend_content_security_policy script_src: [
+                                   "https://paywall.unlock-protocol.com/static/unlock.latest.min.js",
+                                 ]
 
   add_admin_route "unlock.title", "discourse-unlock"
 
   Discourse::Application.routes.append do
-    get  "/admin/plugins/discourse-unlock" => "admin_unlock#index", constraints: StaffConstraint.new
-    put  "/admin/plugins/discourse-unlock" => "admin_unlock#update", constraints: StaffConstraint.new
+    get "/admin/plugins/discourse-unlock" => "admin_unlock#index",
+        :constraints => StaffConstraint.new
+    put "/admin/plugins/discourse-unlock" => "admin_unlock#update",
+        :constraints => StaffConstraint.new
     post "/unlock" => "unlock#unlock"
   end
 
@@ -72,7 +78,7 @@ after_initialize do
 
   add_to_serializer(:basic_category, :include_lock_icon?) do
     object.custom_fields[::Unlock::CF_LOCK_ADDRESS].present? &&
-    object.custom_fields[::Unlock::CF_LOCK_ICON].present?
+      object.custom_fields[::Unlock::CF_LOCK_ICON].present?
   end
 
   require_dependency "topic_view"
@@ -93,7 +99,12 @@ after_initialize do
       super
 
       if settings = ::Unlock.settings
-        store_preloaded("lock", MultiJson.dump(settings.slice("lock_network", "lock_address", "lock_icon", "lock_call_to_action")))
+        store_preloaded(
+          "lock",
+          MultiJson.dump(
+            settings.slice("lock_network", "lock_address", "lock_icon", "lock_call_to_action"),
+          ),
+        )
       end
     end
   end
