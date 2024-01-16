@@ -51,15 +51,19 @@ class AdminUnlockController < Admin::AdminController
       end
     end
 
-    PluginStore.set(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS, {
-      lock_address: address,
-      lock_network: network,
-      lock_icon: icon,
-      lock_call_to_action: cta,
-      locked_category_ids: categories.pluck(:id),
-      locked_topic_icon: topic_icon,
-      unlocked_group_name: group_name,
-    })
+    PluginStore.set(
+      ::Unlock::PLUGIN_NAME,
+      ::Unlock::SETTINGS,
+      {
+        lock_address: address,
+        lock_network: network,
+        lock_icon: icon,
+        lock_call_to_action: cta,
+        locked_category_ids: categories.pluck(:id),
+        locked_topic_icon: topic_icon,
+        unlocked_group_name: group_name,
+      },
+    )
 
     ::Unlock.clear_cache
 

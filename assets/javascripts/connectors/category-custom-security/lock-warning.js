@@ -1,5 +1,5 @@
 export default {
-  shouldRender({ category }, _) {
+  shouldRender({ category }) {
     return category?.lock;
-  }
-}
+  },
+};

@@ -1,11 +1,15 @@
+import { getOwner } from "@ember/application";
+import { next } from "@ember/runloop";
+import { ajax } from "discourse/lib/ajax";
+import loadScript from "discourse/lib/load-script";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import PreloadStore from "discourse/lib/preload-store";
 import TopicStatus from "discourse/raw-views/topic-status";
 import discourseComputed from "discourse-common/utils/decorators";
-import loadScript from "discourse/lib/load-script";
-import PreloadStore from "discourse/lib/preload-store";
-import { ajax } from "discourse/lib/ajax";
+import I18n from "discourse-i18n";
 
-const UNLOCK_URL = "https://paywall.unlock-protocol.com/static/unlock.latest.min.js";
+const UNLOCK_URL =
+  "https://paywall.unlock-protocol.com/static/unlock.latest.min.js";
 
 function reset() {
   window._redirectUrl = null;
@@ -29,12 +33,12 @@ export default {
               openTag: "span",
               closeTag: "span",
               title: I18n.t("unlock.locked"),
-              icon: this.topic.category.lock_icon
+              icon: this.topic.category.lock_icon,
             });
           }
 
           return results;
-        }
+        },
       });
 
       api.modifyClass("model:post-stream", {
@@ -43,16 +47,20 @@ export default {
           const { lock, url } = result.jqXHR.responseJSON;
 
           if (status === 402 && lock) {
-            if (api.container.lookup("current-user:main")) {
+            if (getOwner(this).lookup("service:current-user")) {
               window._redirectUrl = url;
-              return loadScript(UNLOCK_URL).then(() => window.unlockProtocol.loadCheckoutModal());
+              return loadScript(UNLOCK_URL).then(() =>
+                window.unlockProtocol.loadCheckoutModal()
+              );
             } else {
-              return api.container.lookup("route:application").replaceWith("login");
+              return getOwner(this)
+                .lookup("route:application")
+                .replaceWith("login");
             }
           } else {
             return this._super(result);
           }
-        }
+        },
       });
 
       reset();
@@ -69,42 +77,52 @@ export default {
               wallet: window._wallet,
             };
 
-            if (window._transaction) data["transaction"] = window._transaction;
+            if (window._transaction) {
+              data["transaction"] = window._transaction;
+            }
 
             const url = document.location.origin + window._redirectUrl;
 
             reset();
 
-            return ajax("/unlock.json", { type: "POST", data }).then(() => document.location.replace(url));
+            return ajax("/unlock.json", { type: "POST", data }).then(() =>
+              document.location.replace(url)
+            );
           }
         });
 
-        window.addEventListener("unlockProtocol.authenticated", ({ detail }) => {
-          const { address } = detail;
-          window._wallet = address;
-        });
+        window.addEventListener(
+          "unlockProtocol.authenticated",
+          ({ detail }) => {
+            const { address } = detail;
+            window._wallet = address;
+          }
+        );
 
-        window.addEventListener("unlockProtocol.transactionSent", ({ detail }) => {
-          const { hash, lock } = detail;
-          window._transaction = hash;
-          window._lock = lock;
-        });
+        window.addEventListener(
+          "unlockProtocol.transactionSent",
+          ({ detail }) => {
+            const { hash, lock } = detail;
+            window._transaction = hash;
+            window._lock = lock;
+          }
+        );
 
         window.unlockProtocolConfig = {
           network: settings.lock_network || 4,
           locks: {
-            [settings.lock_address]: { }
+            [settings.lock_address]: {},
           },
           icon: settings.lock_icon,
           callToAction: {
-            default: settings.lock_call_to_action
+            default: settings.lock_call_to_action,
           },
           referrer: "0x67dec02d34ea56bcf9f7c9b318298dda8c562080",
         };
 
         // preload unlock script
-        Ember.run.next(() => loadScript(UNLOCK_URL));
+        next(() => loadScript(UNLOCK_URL));
       }
     });
-  }
+  },
 };
