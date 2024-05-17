@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AdminUnlockController < Admin::AdminController
+  requires_plugin Unlock::PLUGIN_NAME
+
   def index
     render json: ::Unlock.settings
   end
@@ -52,7 +54,7 @@ class AdminUnlockController < Admin::AdminController
     end
 
     PluginStore.set(
-      ::Unlock::PLUGIN_NAME,
+      ::Unlock::PLUGIN_STORE_NAME,
       ::Unlock::SETTINGS,
       {
         lock_address: address,

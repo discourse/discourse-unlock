@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UnlockController < ApplicationController
+  requires_plugin Unlock::PLUGIN_NAME
+
   def unlock
     lock = params.require(:lock)
     wallet = params[:wallet]
@@ -17,7 +19,11 @@ class UnlockController < ApplicationController
     value[:wallet] = wallet if wallet.present?
     value[:transaction] = transaction if transaction.present?
 
-    PluginStore.set(::Unlock::PLUGIN_NAME, "#{::Unlock::TRANSACTION}_#{current_user.id}", value)
+    PluginStore.set(
+      ::Unlock::PLUGIN_STORE_NAME,
+      "#{::Unlock::TRANSACTION}_#{current_user.id}",
+      value,
+    )
 
     render json: success_json
   end
