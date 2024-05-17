@@ -15,7 +15,8 @@ module ::Unlock
   CF_LOCK_ICON ||= "unlock-icon"
   CF_LOCK_GROUP ||= "unlock-group"
 
-  PLUGIN_NAME ||= "unlocked"
+  PLUGIN_NAME ||= "discourse-unlock"
+  PLUGIN_STORE_NAME ||= "unlocked"
   SETTINGS ||= "settings"
   TRANSACTION ||= "transaction"
 
@@ -24,7 +25,7 @@ module ::Unlock
   @cache = ::DistributedCache.new("discourse-unlock")
 
   def self.settings
-    @cache[SETTINGS] ||= PluginStore.get(::Unlock::PLUGIN_NAME, ::Unlock::SETTINGS) || {}
+    @cache[SETTINGS] ||= PluginStore.get(::Unlock::PLUGIN_STORE_NAME, ::Unlock::SETTINGS) || {}
   end
 
   def self.clear_cache
@@ -39,10 +40,10 @@ module ::Unlock
 end
 
 after_initialize do
-  %w[
-    ../app/controllers/unlock_controller.rb
-    ../app/controllers/admin_unlock_controller.rb
-  ].each { |path| require File.expand_path(path, __FILE__) }
+  require_relative "app/controllers/unlock_controller"
+  require_relative "app/controllers/admin_unlock_controller"
+  require_relative "lib/unlock/application_controller_extension"
+  require_relative "lib/unlock/topic_view_extension"
 
   extend_content_security_policy script_src: [
                                    "https://paywall.unlock-protocol.com/static/unlock.latest.min.js",
@@ -81,52 +82,8 @@ after_initialize do
       object.custom_fields[::Unlock::CF_LOCK_ICON].present?
   end
 
-  require_dependency "topic_view"
-
-  module TopicViewLockExtension
-    def check_and_raise_exceptions(skip_staff_action)
-      super
-      raise ::Unlock::NoAccessLocked.new if ::Unlock.is_locked?(@guardian, @topic)
-    end
-  end
-
-  ::TopicView.prepend TopicViewLockExtension
-
-  require_dependency "application_controller"
-
-  module ApplicationControllerLockExtension
-    def preload_json
-      super
-
-      if settings = ::Unlock.settings
-        store_preloaded(
-          "lock",
-          MultiJson.dump(
-            settings.slice("lock_network", "lock_address", "lock_icon", "lock_call_to_action"),
-          ),
-        )
-      end
-    end
-  end
-
-  ::ApplicationController.prepend ApplicationControllerLockExtension
-
-  class ::ApplicationController
-    rescue_from ::Unlock::NoAccessLocked do
-      if request.format.json?
-        response = { error: "Payment Required" }
-
-        if topic_id = params["topic_id"] || params["id"]
-          if topic = Topic.find_by(id: topic_id)
-            response[:lock] = topic.category.custom_fields[::Unlock::CF_LOCK_ADDRESS]
-            response[:url] = topic.relative_url
-          end
-        end
-
-        render_json_dump response, status: 402
-      else
-        rescue_discourse_actions(:payment_required, 402, include_ember: true)
-      end
-    end
+  reloadable_patch do
+    TopicView.prepend(Unlock::TopicViewExtension)
+    ApplicationController.prepend(Unlock::ApplicationControllerExtension)
   end
 end
