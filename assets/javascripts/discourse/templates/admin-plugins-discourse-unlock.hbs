@@ -4,7 +4,7 @@
       {{i18n "unlock.settings.lock_address.label"}}
     </div>
     <div class="setting-value">
-      {{text-field value=model.lock_address placeholder="0x..."}}
+      {{text-field value=this.model.lock_address placeholder="0x..."}}
       <div class="desc">
         {{html-safe (i18n "unlock.settings.lock_address.desc")}}
       </div>
@@ -15,7 +15,7 @@
       {{i18n "unlock.settings.lock_network.label"}}
     </div>
     <div class="setting-value">
-      {{text-field value=model.lock_network}}
+      {{text-field value=this.model.lock_network}}
       <div class="desc">
         {{i18n "unlock.settings.lock_network.desc"}}
       </div>
@@ -26,7 +26,7 @@
       {{i18n "unlock.settings.lock_icon.label"}}
     </div>
     <div class="setting-value">
-      {{text-field value=model.lock_icon placeholder="https://..."}}
+      {{text-field value=this.model.lock_icon placeholder="https://..."}}
       <div class="desc">
         {{i18n "unlock.settings.lock_icon.desc"}}
       </div>
@@ -38,7 +38,7 @@
     </div>
     <div class="setting-value">
       {{text-field
-        value=model.lock_call_to_action
+        value=this.model.lock_call_to_action
         placeholder="Purchase your NFT membership now!"
       }}
       <div class="desc">
@@ -52,9 +52,9 @@
     </div>
     <div class="setting-value">
       {{group-selector
-        groupNames=model.unlocked_group_name
+        groupNames=this.model.unlocked_group_name
         single="true"
-        groupFinder=groupFinder
+        groupFinder=this.groupFinder
       }}
       <div class="desc">
         {{i18n "unlock.settings.unlocked_group_name.desc"}}
@@ -67,7 +67,7 @@
     </div>
     <div class="setting-value">
       {{category-selector
-        categories=lockedCategories
+        categories=this.lockedCategories
         onChange=(action "changeLockedCategories")
       }}
       <div class="desc">
@@ -81,9 +81,9 @@
     </div>
     <div class="setting-value">
       {{icon-picker
-        value=model.locked_topic_icon
+        value=this.model.locked_topic_icon
         options=(hash maximum=1)
-        onChange=(action (mut model.locked_topic_icon))
+        onChange=(action (mut this.model.locked_topic_icon))
       }}
       <div class="desc">
         {{i18n "unlock.settings.locked_topic_icon.desc"}}
@@ -92,4 +92,4 @@
   </div>
 </section>
 
-{{save-controls model=model action=(action "save") saved=saved}}
+{{save-controls model=this.model action=(action "save") saved=this.saved}}
