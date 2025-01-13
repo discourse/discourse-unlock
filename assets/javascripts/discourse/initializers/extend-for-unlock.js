@@ -28,7 +28,7 @@ export default {
           "raw-view:topic-status",
           (Superclass) =>
             class extends Superclass {
-              @discourseComputed("topic.{has_accepted_answer,can_have_answer}")
+              @discourseComputed("topic.category.lock")
               statuses() {
                 const results = super.statuses;
 
