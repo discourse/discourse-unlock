@@ -4,7 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import loadScript from "discourse/lib/load-script";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
-import TopicStatus from "discourse/raw-views/topic-status";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -22,25 +22,33 @@ export default {
   name: "apply-unlock",
 
   initialize() {
-    withPluginApi("0.11.2", (api) => {
-      TopicStatus.reopen({
-        @discourseComputed()
-        statuses() {
-          const results = this._super();
+    withPluginApi("2.0.0", (api) => {
+      withSilencedDeprecations("discourse.hbr-topic-list-overrides", () => {
+        api.modifyClass(
+          "raw-view:topic-status",
+          (Superclass) =>
+            class extends Superclass {
+              @discourseComputed("topic.category.lock")
+              statuses() {
+                const results = super.statuses;
 
-          if (this.topic.category?.lock) {
-            results.push({
-              openTag: "span",
-              closeTag: "span",
-              title: I18n.t("unlock.locked"),
-              icon: this.topic.category.lock_icon,
-            });
-          }
+                if (this.topic.category?.lock) {
+                  results.push({
+                    openTag: "span",
+                    closeTag: "span",
+                    title: I18n.t("unlock.locked"),
+                    icon: this.topic.category.lock_icon,
+                  });
+                }
 
-          return results;
-        },
+                return results;
+              }
+            }
+        );
       });
+    });
 
+    withPluginApi("0.11.2", (api) => {
       api.modifyClass("model:post-stream", {
         errorLoading(result) {
           const { status } = result.jqXHR;
