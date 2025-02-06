@@ -1,12 +1,12 @@
 import { getOwner } from "@ember/application";
 import { next } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import loadScript from "discourse/lib/load-script";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const UNLOCK_URL =
   "https://paywall.unlock-protocol.com/static/unlock.latest.min.js";
@@ -36,7 +36,7 @@ export default {
                   results.push({
                     openTag: "span",
                     closeTag: "span",
-                    title: I18n.t("unlock.locked"),
+                    title: i18n("unlock.locked"),
                     icon: this.topic.category.lock_icon,
                   });
                 }
