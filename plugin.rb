@@ -11,14 +11,14 @@ module ::Unlock
   class NoAccessLocked < StandardError
   end
 
-  CF_LOCK_ADDRESS ||= "unlock-lock"
-  CF_LOCK_ICON ||= "unlock-icon"
-  CF_LOCK_GROUP ||= "unlock-group"
+  CF_LOCK_ADDRESS = "unlock-lock"
+  CF_LOCK_ICON = "unlock-icon"
+  CF_LOCK_GROUP = "unlock-group"
 
-  PLUGIN_NAME ||= "discourse-unlock"
-  PLUGIN_STORE_NAME ||= "unlocked"
-  SETTINGS ||= "settings"
-  TRANSACTION ||= "transaction"
+  PLUGIN_NAME = "discourse-unlock"
+  PLUGIN_STORE_NAME = "unlocked"
+  SETTINGS = "settings"
+  TRANSACTION = "transaction"
 
   require_dependency "distributed_cache"
 
