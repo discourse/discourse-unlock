@@ -5,6 +5,8 @@ module Unlock
     extend ActiveSupport::Concern
 
     prepended do
+      before_action :store_unlock_settings
+
       rescue_from ::Unlock::NoAccessLocked do
         if request.format.json?
           response = { error: "Payment Required" }
@@ -23,17 +25,14 @@ module Unlock
       end
     end
 
-    def preload_json
-      super
-
-      if settings = ::Unlock.settings
-        store_preloaded(
-          "lock",
-          MultiJson.dump(
-            settings.slice("lock_network", "lock_address", "lock_icon", "lock_call_to_action"),
-          ),
-        )
-      end
+    def store_unlock_settings
+      return unless settings = ::Unlock.settings
+      store_preloaded(
+        "lock",
+        MultiJson.dump(
+          settings.slice("lock_network", "lock_address", "lock_icon", "lock_call_to_action"),
+        ),
+      )
     end
   end
 end
