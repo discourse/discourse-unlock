@@ -1,12 +1,9 @@
 import { getOwner } from "@ember/application";
 import { next } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import loadScript from "discourse/lib/load-script";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
-import { i18n } from "discourse-i18n";
 
 const UNLOCK_URL =
   "https://paywall.unlock-protocol.com/static/unlock.latest.min.js";
@@ -22,32 +19,6 @@ export default {
   name: "apply-unlock",
 
   initialize() {
-    withPluginApi("2.0.0", (api) => {
-      withSilencedDeprecations("discourse.hbr-topic-list-overrides", () => {
-        api.modifyClass(
-          "raw-view:topic-status",
-          (Superclass) =>
-            class extends Superclass {
-              @discourseComputed("topic.category.lock")
-              statuses() {
-                const results = super.statuses;
-
-                if (this.topic.category?.lock) {
-                  results.push({
-                    openTag: "span",
-                    closeTag: "span",
-                    title: i18n("unlock.locked"),
-                    icon: this.topic.category.lock_icon,
-                  });
-                }
-
-                return results;
-              }
-            }
-        );
-      });
-    });
-
     withPluginApi("0.11.2", (api) => {
       api.modifyClass("model:post-stream", {
         errorLoading(result) {
