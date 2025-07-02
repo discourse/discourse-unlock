@@ -19,11 +19,12 @@ export default {
   name: "apply-unlock",
 
   initialize() {
-    withPluginApi("0.11.2", (api) => {
-      api.modifyClass("model:post-stream", {
-        errorLoading(result) {
-          const { status } = result.jqXHR;
-          const { lock, url } = result.jqXHR.responseJSON;
+    withPluginApi((api) => {
+      api.registerBehaviorTransformer(
+        "post-stream-error-loading",
+        ({ context: { error }, next: _super }) => {
+          const { status } = error.jqXHR;
+          const { lock, url } = error.jqXHR.responseJSON;
 
           if (status === 402 && lock) {
             if (getOwner(this).lookup("service:current-user")) {
@@ -37,10 +38,10 @@ export default {
                 .replaceWith("login");
             }
           } else {
-            return this._super(result);
+            return _super(error);
           }
-        },
-      });
+        }
+      );
 
       reset();
 
