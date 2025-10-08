@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import loadScript from "discourse/lib/load-script";
