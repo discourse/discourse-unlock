@@ -1,9 +1,9 @@
 import { fn, hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import GroupSelector from "discourse/components/group-selector";
 import SaveControls from "discourse/components/save-controls";
 import TextField from "discourse/components/text-field";
-import htmlSafe from "discourse/helpers/html-safe";
 import { i18n } from "discourse-i18n";
 import CategorySelector from "select-kit/components/category-selector";
 import IconPicker from "select-kit/components/icon-picker";
