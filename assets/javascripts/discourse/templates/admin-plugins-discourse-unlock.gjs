@@ -1,5 +1,5 @@
 import { fn, hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import GroupSelector from "discourse/components/group-selector";
 import SaveControls from "discourse/components/save-controls";
 import TextField from "discourse/components/text-field";
@@ -19,7 +19,7 @@ export default <template>
           @placeholder="0x..."
         />
         <div class="desc">
-          {{htmlSafe (i18n "unlock.settings.lock_address.desc")}}
+          {{trustHTML (i18n "unlock.settings.lock_address.desc")}}
         </div>
       </div>
     </div>
